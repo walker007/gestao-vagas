@@ -8,3 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+security:
+  token:
+    secret: JAVAGAS_@123#
