@@ -5,7 +5,9 @@ import br.com.alex.gestao_vagas.modules.company.entities.JobEntity;
 import br.com.alex.gestao_vagas.modules.company.useCases.CreateJobUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +17,17 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/company")
-public record JobController(CreateJobUseCase createJobUseCase) {
+public class JobController {
+
+    private final CreateJobUseCase createJobUseCase;
+
+    @Autowired
+    JobController(CreateJobUseCase createJobUseCase) {
+        this.createJobUseCase = createJobUseCase;
+    }
 
     @PostMapping("/job")
+    @PreAuthorize("hasRole('COMPANY')")
     public ResponseEntity<?> create(@Valid @RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
         try {
             JobEntity jobEntity = JobEntity.builder()

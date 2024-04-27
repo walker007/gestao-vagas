@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public record ProfileCancidadeUseCase(CandidateRepository repository) {
+public record ProfileCandidateUseCase(CandidateRepository repository) {
 
     public ProfileCandidateResponseDTO execute(UUID idCandidate) {
         CandidateEntity candidate = this.repository.findById(idCandidate)

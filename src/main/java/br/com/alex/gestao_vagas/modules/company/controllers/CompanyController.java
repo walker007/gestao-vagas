@@ -3,6 +3,7 @@ package br.com.alex.gestao_vagas.modules.company.controllers;
 import br.com.alex.gestao_vagas.modules.company.entities.CompanyEntity;
 import br.com.alex.gestao_vagas.modules.company.useCases.CreateCompanyUseCase;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/company")
-public record CompanyController(CreateCompanyUseCase createCompanyUseCase) {
+public class CompanyController {
+    private final CreateCompanyUseCase createCompanyUseCase;
+
+    @Autowired
+    CompanyController(CreateCompanyUseCase createCompanyUseCase) {
+        this.createCompanyUseCase = createCompanyUseCase;
+    }
 
     @PostMapping()
     public ResponseEntity<?> create(@Valid @RequestBody CompanyEntity companyEntity) {
