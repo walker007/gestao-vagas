@@ -20,7 +20,7 @@ public class AuthCompanyUseCase {
 
     private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
-    @Value("${security.token.secret}")
+    @Value("${security.token.secret.company}")
     private String secret;
 
     @Autowired

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JWTProvider {
-    @Value("${security.token.secret}")
+    @Value("${security.token.secret.company}")
     private String secret;
 
     public String validateToken(String token) {
