@@ -6,6 +6,7 @@ import br.com.alex.gestao_vagas.modules.candidate.useCases.ProfileCancidadeUseCa
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -26,6 +27,7 @@ public record CandidateController(CreateCandidateUseCase createCandidateUseCase,
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('CANDIDATE')")
     public ResponseEntity<?> get(HttpServletRequest request) {
         try {
             String idCandidate = request.getAttribute("candidate_id").toString();

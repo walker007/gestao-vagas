@@ -11,7 +11,7 @@ import java.util.UUID;
 @Service
 public record ProfileCancidadeUseCase(CandidateRepository repository) {
 
-    public CandidateEntity execute(UUID idCandidate) {
+    public ProfileCandidateResponseDTO execute(UUID idCandidate) {
         CandidateEntity candidate = this.repository.findById(idCandidate)
                 .orElseThrow(() -> new UsernameNotFoundException("Candidate not found"));
         ProfileCandidateResponseDTO candidateDto = ProfileCandidateResponseDTO.builder()

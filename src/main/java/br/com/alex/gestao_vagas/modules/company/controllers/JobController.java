@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/job")
+@RequestMapping("/company")
 public record JobController(CreateJobUseCase createJobUseCase) {
 
-    @PostMapping
+    @PostMapping("/job")
     public ResponseEntity<?> create(@Valid @RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
         try {
             JobEntity jobEntity = JobEntity.builder()
@@ -26,7 +26,7 @@ public record JobController(CreateJobUseCase createJobUseCase) {
                     .level(createJobDTO.getLevel())
                     .companyId(UUID.fromString(request.getAttribute("company_id").toString()))
                     .build();
-            
+
             return ResponseEntity.ok().body(createJobUseCase.execute(jobEntity));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

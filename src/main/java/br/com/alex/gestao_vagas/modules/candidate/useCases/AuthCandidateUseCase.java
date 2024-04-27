@@ -44,7 +44,7 @@ public class AuthCandidateUseCase {
                 .withIssuer("Javagas")
                 .withSubject(candidate.getId().toString())
                 .withExpiresAt(expiresIn)
-                .withClaim("roles", List.of("candidate"))
+                .withClaim("roles", List.of("CANDIDATE"))
                 .sign(algorithm);
         return AuthCandidateResponseDTO.builder()
                 .expires_in(expiresIn.toEpochMilli())

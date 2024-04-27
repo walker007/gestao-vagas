@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/candidate")
 public record AuthCandidateController(AuthCandidateUseCase authCandidateUseCase) {
-    @PostMapping("/candidate")
+    @PostMapping("/auth")
     public ResponseEntity<?> authCandidate(AuthCandidateRequestDTO auth) {
         try {
             AuthCandidateResponseDTO token = this.authCandidateUseCase.execute(auth);
