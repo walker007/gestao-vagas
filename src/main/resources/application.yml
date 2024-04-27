@@ -12,5 +12,5 @@ spring:
 security:
   token:
     secret:
-      candidate: JAVAGAS_@123#CANDIDATE
-      company: JAVAGAS_@123
+      candidate: 'JAVAGAS_@123#CANDIDATE'
+      company: 'JAVAGAS_@123'
