@@ -25,7 +25,7 @@ public class CandidateController {
         this.profileCancidadeUseCase = profileCancidadeUseCase;
     }
 
-    @PostMapping()
+    @PostMapping("/")
     public ResponseEntity<?> create(@Valid @RequestBody CandidateEntity candidateEntity) {
         try {
             return ResponseEntity.ok().body(createCandidateUseCase.execute(candidateEntity));

@@ -36,30 +36,31 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
 
+
         if (request.getRequestURI().startsWith("/company")) {
-            if (header == null || !header.startsWith("Bearer ")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+            System.out.println(request.getRequestURI());
+            if (header != null) {
+
+
+                DecodedJWT decodedToken = this.jwtProvider.validateToken(header);
+
+                if (decodedToken == null) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
+                List<SimpleGrantedAuthority> roles = decodedToken
+                        .getClaim("roles")
+                        .asList(String.class)
+                        .stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                        .toList();
+
+                request.setAttribute("company_id", decodedToken);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(decodedToken, null, roles);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
-            DecodedJWT decodedToken = this.jwtProvider.validateToken(header);
-
-            if (decodedToken == null) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-
-            List<SimpleGrantedAuthority> roles = decodedToken
-                    .getClaim("roles")
-                    .asList(String.class)
-                    .stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
-                    .toList();
-
-            request.setAttribute("company_id", decodedToken);
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(decodedToken, null, roles);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
     }
