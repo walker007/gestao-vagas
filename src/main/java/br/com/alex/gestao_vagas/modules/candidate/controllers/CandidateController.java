@@ -2,7 +2,16 @@ package br.com.alex.gestao_vagas.modules.candidate.controllers;
 
 import br.com.alex.gestao_vagas.modules.candidate.CandidateEntity;
 import br.com.alex.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
+import br.com.alex.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.alex.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
+import br.com.alex.gestao_vagas.modules.company.entities.JobEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -17,12 +27,15 @@ import java.util.UUID;
 public class CandidateController {
     private final CreateCandidateUseCase createCandidateUseCase;
     private final ProfileCandidateUseCase profileCancidadeUseCase;
+    private final ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
 
     @Autowired
     CandidateController(CreateCandidateUseCase createCandidateUseCase,
-                        ProfileCandidateUseCase profileCancidadeUseCase) {
+                        ProfileCandidateUseCase profileCancidadeUseCase,
+                        ListAllJobsByFilterUseCase listAllJobsByFilterUseCase) {
         this.createCandidateUseCase = createCandidateUseCase;
         this.profileCancidadeUseCase = profileCancidadeUseCase;
+        this.listAllJobsByFilterUseCase = listAllJobsByFilterUseCase;
     }
 
     @PostMapping("/")
@@ -43,5 +56,19 @@ public class CandidateController {
         } catch (Exception e) {
             return ResponseEntity.unprocessableEntity().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/job")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidato", description = "Informações do candidato")
+    @Operation(summary = "Listar vagas disponíveis para o candidato", description = "Essa função é responsável por " +
+            "listar as vagas disponíveis no filtro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
+            })
+    })
+    public List<JobEntity> findJobsByFilter(@RequestParam String filter) {
+        return this.listAllJobsByFilterUseCase.execute(filter);
     }
 }
