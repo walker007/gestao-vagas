@@ -1,6 +1,7 @@
 package br.com.alex.gestao_vagas.modules.candidate.controllers;
 
 import br.com.alex.gestao_vagas.modules.candidate.CandidateEntity;
+import br.com.alex.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import br.com.alex.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import br.com.alex.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.alex.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -40,6 +41,9 @@ public class CandidateController {
     }
 
     @PostMapping("/")
+    @Tag(name = "Candidato", description = "Informações do candidato")
+    @Operation(summary = "Cadastro de Candidato", description = "Essa função é responsável por " +
+            "cadastrar um novo candidato")
     public ResponseEntity<?> create(@Valid @RequestBody CandidateEntity candidateEntity) {
         try {
             return ResponseEntity.ok().body(createCandidateUseCase.execute(candidateEntity));
@@ -50,6 +54,15 @@ public class CandidateController {
 
     @GetMapping("/")
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidato", description = "Informações do candidato")
+    @Operation(summary = "Perfil do Candidato", description = "Essa função é responsável por " +
+            "retornar o perfil do candidato")
+    @SecurityRequirement(name = "jwt_auth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class))
+            }), @ApiResponse(responseCode = "400", description = "User Not Found"),
+    })
     public ResponseEntity<?> get(HttpServletRequest request) {
         try {
             String idCandidate = request.getAttribute("candidate_id").toString();
