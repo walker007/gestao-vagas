@@ -9,6 +9,6 @@ import java.util.List;
 @Service
 public record ListAllJobsByFilterUseCase(JobRepository jobRepository) {
     public List<JobEntity> execute(String filter) {
-        return this.jobRepository.findByDescriptionContaining(filter);
+        return this.jobRepository.findByDescriptionContainingIgnoreCase(filter);
     }
 }
