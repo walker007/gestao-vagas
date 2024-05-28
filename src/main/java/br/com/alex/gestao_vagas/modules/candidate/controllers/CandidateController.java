@@ -2,6 +2,8 @@ package br.com.alex.gestao_vagas.modules.candidate.controllers;
 
 import br.com.alex.gestao_vagas.modules.candidate.CandidateEntity;
 import br.com.alex.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
+import br.com.alex.gestao_vagas.modules.candidate.entity.ApplyJobEntity;
+import br.com.alex.gestao_vagas.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import br.com.alex.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import br.com.alex.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.alex.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -31,14 +33,17 @@ public class CandidateController {
     private final CreateCandidateUseCase createCandidateUseCase;
     private final ProfileCandidateUseCase profileCancidadeUseCase;
     private final ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
+    private final ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
     @Autowired
     CandidateController(CreateCandidateUseCase createCandidateUseCase,
                         ProfileCandidateUseCase profileCancidadeUseCase,
-                        ListAllJobsByFilterUseCase listAllJobsByFilterUseCase) {
+                        ListAllJobsByFilterUseCase listAllJobsByFilterUseCase,
+                        ApplyJobCandidateUseCase applyJobCandidateUseCase) {
         this.createCandidateUseCase = createCandidateUseCase;
         this.profileCancidadeUseCase = profileCancidadeUseCase;
         this.listAllJobsByFilterUseCase = listAllJobsByFilterUseCase;
+        this.applyJobCandidateUseCase = applyJobCandidateUseCase;
     }
 
     @PostMapping("/")
@@ -91,5 +96,20 @@ public class CandidateController {
     @SecurityRequirement(name = "jwt_auth")
     public List<JobEntity> findJobsByFilter(@RequestParam String filter) {
         return this.listAllJobsByFilterUseCase.execute(filter);
+    }
+
+    @PostMapping("/job/apply")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @SecurityRequirement(name = "jwt_auth")
+    @Operation(summary = "Inscrição do candidato para uma vaga", description = "Essa função é responsável por " +
+            "realizar a inscrição do candidato para uma vaga")
+    public ResponseEntity<?> applyJob(HttpServletRequest request, @RequestBody UUID jobId) {
+        try {
+            String idCandidate = request.getAttribute("candidate_id").toString();
+            ApplyJobEntity result = applyJobCandidateUseCase.execute(UUID.fromString(idCandidate), jobId);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.unprocessableEntity().body(e.getMessage());
+        }
     }
 }
