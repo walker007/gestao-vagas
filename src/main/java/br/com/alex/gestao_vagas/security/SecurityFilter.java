@@ -38,7 +38,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
 
         if (request.getRequestURI().startsWith("/company")) {
-            System.out.println(request.getRequestURI());
+
             if (header != null) {
 
 
@@ -55,8 +55,9 @@ public class SecurityFilter extends OncePerRequestFilter {
                         .stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
                         .toList();
+                String companyId = decodedToken.getSubject();
 
-                request.setAttribute("company_id", decodedToken);
+                request.setAttribute("company_id", companyId);
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(decodedToken, null, roles);
                 SecurityContextHolder.getContext().setAuthentication(authentication);

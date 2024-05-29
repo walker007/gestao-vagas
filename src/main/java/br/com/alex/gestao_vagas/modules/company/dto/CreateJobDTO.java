@@ -1,8 +1,14 @@
 package br.com.alex.gestao_vagas.modules.company.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class CreateJobDTO {
     @Schema(description = "Nome da vaga", example = "Desenvolvedor Java", requiredMode = Schema.RequiredMode.REQUIRED)

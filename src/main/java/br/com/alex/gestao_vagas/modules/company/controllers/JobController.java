@@ -55,6 +55,7 @@ public class JobController {
 
             return ResponseEntity.ok().body(createJobUseCase.execute(jobEntity));
         } catch (Exception e) {
+
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
