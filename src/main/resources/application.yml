@@ -14,3 +14,18 @@ security:
     secret:
       candidate: 'JAVAGAS_@123#CANDIDATE'
       company: 'JAVAGAS_@123'
+
+management:
+  endpoint:
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+    health:
+      enabled: true
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: 'health,metrics,prometheus'
+    enabled-by-default: false

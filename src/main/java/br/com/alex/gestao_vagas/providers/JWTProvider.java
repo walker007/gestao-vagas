@@ -12,12 +12,12 @@ public class JWTProvider {
     private String secret;
 
     public DecodedJWT validateToken(String token) {
-       
+
         try {
             DecodedJWT tokenDecoded = JWT.require(Algorithm.HMAC256(secret)).build().verify(token.replace("Bearer ", ""));
             return tokenDecoded;
         } catch (Exception e) {
-            e.printStackTrace();
+
             return null;
         }
     }
